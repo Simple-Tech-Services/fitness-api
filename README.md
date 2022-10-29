@@ -1,27 +1,47 @@
-# Dependencies
+### Dependencies
 
 - Flask
 
-# Setup
+## Setup
 
-## Windows
+###### Windows
 
-### Make Repo
+#### Make Repo
 
-1. git clone repo_name
-2. cd repo_name
-3. py -3 -m venv venv
+```
+git clone repo_name
+```
 
-### Activate Environment
+```
+cd repo_name
+```
 
-1. venv\Scripts\activate
+```
+py -3 -m venv venv
+```
 
-### Install Flask
+#### Activate Environment
 
-1. pip install Flask
+```
+venv\Scripts\activate
+```
 
-# Usage
+#### To deactivate enviroment
 
-### Run App
+```
+deactivate
+```
 
-- flask --app ./main.py --debug run
+#### Install Flask
+
+```
+pip install Flask
+```
+
+## Usage
+
+#### Run App
+
+```
+flask --app ./main.py --debug run
+```
