@@ -1,16 +1,13 @@
-from flask import Flask
-from controller.users import Users
-from controller.workouts import Workouts
+from flask import Flask, request
+from controller import Users, Workouts
 
 app = Flask(__name__)
 
-usersRoute = Users()
+registerUsersRoutes = Users()
+registerWrokoutRoutes = Workouts()
 
 
 @app.route("/")
 def hello_world():
+    # Register User Routes # Register Workout Routes
     return "welcome to our fitness app api"
-
-# Register User Routes
-
-# Register Workout Routes
