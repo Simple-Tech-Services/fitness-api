@@ -16,26 +16,28 @@ git clone repo_name
 cd repo_name
 ```
 
+### Create a virual enviroment
+
 ```
 py -3 -m venv venv
 ```
 
-#### Activate Environment
+Activate Script
 
 ```
 venv\Scripts\activate
 ```
 
-#### To deactivate enviroment
+deactive virtual enviroment
 
 ```
 deactivate
 ```
 
-#### Install Flask
+#### Install required packages
 
 ```
-pip install Flask
+pip install -r ./requirements.txt
 ```
 
 ## Usage
