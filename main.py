@@ -3,18 +3,24 @@ from controller import Users, Workouts
 
 app = Flask(__name__)
 
-registerUsersRoutes = Users()
-registerWrokoutRoutes = Workouts()
+user_routes = Users()
+workout_routes = Workouts()
+
 
 @app.route("/")
 def hello_world():
-    # Register User Routes # Register Workout Routes
     return "welcome to our fitness app api"
 
 
-@app.route("/workout")
+# Users routes
+
+
+# Workout routes
+@app.route("/workouts", methods=['POST', 'GET', 'DELETE', 'PUT'])
 def route_workout():
-    response = registerUsersRoutes.getUsers()
-    return response
+    if (request.method == 'GET'):
+        response = workout_routes.get_workouts()
+        return response
 
 
+# Exercise routes
