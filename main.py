@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy;
 from controller import Users, Workouts
 
 app = Flask(__name__)
