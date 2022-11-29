@@ -40,6 +40,10 @@ deactivate
 pip install -r ./requirements.txt
 ```
 
+#### Create your .env file for enviroment variables
+
+Use the .env.example to make a .env file for the enviroment variables
+
 ## Usage
 
 #### Run App
