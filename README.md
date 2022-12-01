@@ -1,12 +1,12 @@
-### Dependencies
+## Introduction
 
-- Flask
+Fitness API built with Flask and MySQL
 
 ## Setup
 
-###### Windows
+#### Clone repository
 
-#### Make Repo
+###### Windows - Mac - Linux
 
 ```
 git clone repo_name
@@ -16,19 +16,43 @@ git clone repo_name
 cd repo_name
 ```
 
-### Create a virual enviroment
+#### Create virtual environment
+
+###### Windows
+
+Generate virtual environment
 
 ```
 py -3 -m venv venv
 ```
 
-Activate Script
+Activate virtual environment
 
 ```
 venv\Scripts\activate
 ```
 
-deactive virtual enviroment
+Deactivate virtual environment
+
+```
+deactivate
+```
+
+###### Mac - Linux
+
+Generate virtual environment
+
+```
+python3 -m venv venv
+```
+
+Activate virtual environment
+
+```
+. venv/bin/activate
+```
+
+Deactivate virtual environment
 
 ```
 deactivate
@@ -36,11 +60,19 @@ deactivate
 
 #### Install required packages
 
+###### Windows - Mac - Linux
+
 ```
 pip install -r ./requirements.txt
 ```
 
+#### Create your .env file for environment variables
+
+Use the .env.example to make a .env file for the environment variables. Populate the variables with your local database information.
+
 ## Usage
+
+###### Windows - Mac - Linux
 
 #### Run App
 
