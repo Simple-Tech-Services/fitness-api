@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy;
-from controller import Users, Workouts
+from controller import Users, Workouts, Exercises
 
 # load enviroment variables from .env file
 cwd = os.getcwd()
@@ -36,6 +36,7 @@ with app.app_context():
 # Routes
 user_routes = Users()
 workout_routes = Workouts()
+exercises_routes = Exercises()
 
 
 @app.route("/")
@@ -55,3 +56,25 @@ def route_workout():
 
 
 # Exercise routes
+@app.route("/exercises", methods=['POST', 'GET', 'DELETE', 'PUT'])
+def route_exercises():
+    if (request.method == 'GET'):
+        response = exercises_routes.get_exerises()
+        return response
+
+    elif (request.method == 'POST'):
+        response = exercises_routes.post_exercises()
+        return response
+    
+    elif (request.method == 'DELETE'):
+        response = exercises_routes.delete_exercises()
+        return response
+
+    elif (request.method == 'PUT'):
+        response = exercises_routes.put_exercises()
+        return response
+
+    else:
+        return "This route does not exist."
+
+
