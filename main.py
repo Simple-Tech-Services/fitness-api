@@ -2,13 +2,16 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy;
+
 from controller import Users, Workouts
+from model import UserModel, WorkoutModel, ExerciseModel
+
 
 # load enviroment variables from .env file
 cwd = os.getcwd()
 load_dotenv(cwd + "/.env")
 
-# store Env Variables
+# store env variables
 username = os.getenv('DB_USERNAME')
 password = os.getenv('DB_PASSWORD')
 host = os.getenv('DB_HOST')
@@ -23,17 +26,15 @@ connectionURL = f'mysql+pymysql://{username}:{password}@{host}/{name}'
 app.config["SQLALCHEMY_DATABASE_URI"] = connectionURL
 db.init_app(app)
 
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, nullable=False)
-    email = db.Column(db.String)
+# generate tables
+registerUserModel = UserModel()
+registerWorkoutModel =  WorkoutModel()
+registerExerciseModel = ExerciseModel()
 
 with app.app_context():
     db.create_all()
 
-
-# Routes
+# routes
 user_routes = Users()
 workout_routes = Workouts()
 
@@ -43,7 +44,7 @@ def hello_world():
     return "welcome to our fitness app api"
 
 
-# Users routes
+# users routes
 
 
 # Workout routes
@@ -54,4 +55,4 @@ def route_workout():
         return response
 
 
-# Exercise routes
+# exercise routes
