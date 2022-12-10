@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 
-from controller import Users, Workouts
+from controller import Users, Workouts, Exercises
 from model import UserModel, WorkoutModel, ExerciseModel
 
 
