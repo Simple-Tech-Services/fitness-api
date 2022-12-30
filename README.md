@@ -76,6 +76,14 @@ Use the .env.example to make a .env file for the environment variables. Populate
 
 #### Run App
 
+###### Windows
+
 ```
-flask --app ./main.py --debug run
+py -3 run.py
+```
+
+###### Mac - Linux
+
+```
+python3 run.py
 ```
