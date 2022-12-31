@@ -46,6 +46,12 @@ def route_user_id(id):
         return jsonify(data)
 
     elif (request.method == 'DELETE'):
+        result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
+
+        for user in result:
+            db.session.delete(user)
+            db.session.commit()
+
         return "deleting users"
 
     elif (request.method == 'PUT'):
