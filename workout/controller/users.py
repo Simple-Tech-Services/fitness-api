@@ -4,7 +4,7 @@ from flask import request, jsonify
 
 from workout.model.user import UserModel
 
-@app.route("api/users", methods=['POST','DELETE', 'GET', 'PUT'])
+@app.route("/api/users", methods=['POST','DELETE', 'GET', 'PUT'])
 def route_users():
     if(request.method == 'GET'):
         return 'got all users'
@@ -26,22 +26,22 @@ def route_users():
         db.session.add(user)
         db.session.commit()
 
-        return "user was created"
+        return f'user {username} was created'
     
     else:
         return "This route does not exist"
 
-@app.route("api/user/<id>", methods=['POST','DELETE', 'GET', 'PUT'])
+@app.route("/api/user/<id>", methods=['POST','DELETE', 'GET', 'PUT'])
 def route_user_id(id):
     if (request.method == "GET"):
         data = {}
 
         result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
 
-        for row in result:
-            data = {"username": row.username,
-                    "firstName": row.first_name,
-                    "lastName": row.last_name}
+        for user in result:
+            data = {"username": user.username,
+                    "firstName": user.first_name,
+                    "lastName": user.last_name}
 
         return jsonify(data)
 
