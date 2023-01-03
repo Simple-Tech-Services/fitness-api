@@ -19,7 +19,7 @@ def route_users():
                         "last_name" : user.last_name
                         }
             userList.append(userDict)
-        
+
         return jsonify(userList)
     
     elif (request.method == 'POST'):
@@ -68,7 +68,36 @@ def route_user_id(id):
         return "deleting users"
 
     elif (request.method == 'PUT'):
-        return "updates users"
-    
+        # store new values of user data
+        data = request.json 
+        username = None 
+        result = None      
+        # get the user we want to change from db
+        try:
+            result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
+        except:
+            return "User was not found"
+
+        
+        # update user with new values
+        for user in result:
+            username = user.username
+            if(data.get("field") == "firstName"):
+                user.first_name = data.get("newValue")
+            elif(data.get("field") == "lastName"):
+                user.last_name = data.get("newValue")
+            elif(data.get("field") == "userName"):
+                user.username = data.get("newValue")
+            elif(data.get("field") == "password"):
+                user.password = data.get("newValue")
+            else:
+                return "user properties was not found"
+
+        # commit changes
+        db.session.commit()
+
+        # return status code
+        return f'user {username} was updated!'
+
     else:
         return "This route does not exist"
