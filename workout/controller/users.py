@@ -7,7 +7,20 @@ from workout.model.user import UserModel
 @app.route("/api/users", methods=['POST','DELETE', 'GET', 'PUT'])
 def route_users():
     if(request.method == 'GET'):
-        return 'got all users'
+        userList = []
+
+        result = db.session.execute(db.select(UserModel).order_by(UserModel.username)).scalars()
+        
+        for user in result:
+            userDict = {
+                        "id" : user.id,
+                        "username" : user.username,
+                        "first_name" : user.first_name,
+                        "last_name" : user.last_name
+                        }
+            userList.append(userDict)
+        
+        return jsonify(userList)
     
     elif (request.method == 'POST'):
         # store user info
