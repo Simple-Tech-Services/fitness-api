@@ -17,4 +17,4 @@ def route_exercises():
         return "exercise deleted"
 
     else:
-        return "This route does not exist."
+        return "route does not exist."
