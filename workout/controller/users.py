@@ -69,29 +69,35 @@ def route_user_id(id):
 
     elif (request.method == 'PUT'):
         # store new values of user data
-        data = request.json 
+        data_list = request.json
+
         username = None 
         result = None      
+
         # get the user we want to change from db
         try:
             result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
         except:
             return "User was not found"
-
         
-        # update user with new values
-        for user in result:
-            username = user.username
-            if(data.get("field") == "firstName"):
-                user.first_name = data.get("newValue")
-            elif(data.get("field") == "lastName"):
-                user.last_name = data.get("newValue")
-            elif(data.get("field") == "userName"):
-                user.username = data.get("newValue")
-            elif(data.get("field") == "password"):
-                user.password = data.get("newValue")
-            else:
-                return "user properties was not found"
+        # loop over data to get new value for field 
+        for item in data_list:
+            field = item.get("field")
+            new_value = item.get("newValue")
+
+            # update user with new values
+            for user in result:
+                username = user.username
+                if(field == "firstName"):
+                    user.first_name = new_value
+                elif(field == "lastName"):
+                    user.last_name = new_value
+                elif(field == "userName"):
+                    user.username = new_value
+                elif(field == "password"):
+                    user.password = new_value
+                else:
+                    return "user properties was not found"
 
         # commit changes
         db.session.commit()
