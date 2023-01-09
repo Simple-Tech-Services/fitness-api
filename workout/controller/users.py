@@ -3,14 +3,18 @@ from workout import db
 from flask import request, jsonify
 
 from workout.model.user import UserModel
-
+#Route for all users
 @app.route("/api/users", methods=['POST','DELETE', 'GET', 'PUT'])
 def route_users():
     if(request.method == 'GET'):
         userList = []
+        result = None
 
-        result = db.session.execute(db.select(UserModel).order_by(UserModel.username)).scalars()
-        
+        try:
+            result = db.session.execute(db.select(UserModel).order_by(UserModel.username)).scalars()
+        except:
+            return "Server Error"
+
         for user in result:
             userDict = {
                         "id" : user.id,
@@ -43,13 +47,17 @@ def route_users():
     
     else:
         return "This route does not exist"
-
+#Route for specific user
 @app.route("/api/user/<id>", methods=['POST','DELETE', 'GET', 'PUT'])
 def route_user_id(id):
     if (request.method == "GET"):
         data = {}
-
-        result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
+        result = None
+        
+        try:
+            result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
+        except:
+            return "User was not found"
 
         for user in result:
             data = {"username": user.username,
@@ -59,7 +67,11 @@ def route_user_id(id):
         return jsonify(data)
 
     elif (request.method == 'DELETE'):
-        result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
+        result = None
+        try:
+            result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
+        except:
+            return "User was not found"
 
         for user in result:
             db.session.delete(user)
