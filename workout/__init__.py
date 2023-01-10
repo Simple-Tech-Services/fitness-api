@@ -27,7 +27,7 @@ db.init_app(app)
 def hello_world():
     return "welcome to our fitness app api"
 
-from workout.model import user
+from workout.model import user, workout
 # imports all routes from the controller directory
 from workout.controller import exercises, users, workouts
 

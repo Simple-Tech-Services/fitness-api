@@ -1,19 +1,24 @@
-from workout import app
+from workout import app, db
 from flask import request
+from workout.model.workout import WorkoutModel
 
-@app.route("/workouts", methods=['POST', 'GET', 'DELETE', 'PUT'])
+@app.route("/api/workouts", methods=['POST', 'GET'])
 def route_workouts():
     if (request.method == 'GET'):
         return "Getting all workouts"
 
     elif (request.method == 'POST'):
-        return "creates new workouts"
+        name = request.form['name']
 
-    elif (request.method == 'PUT'):
-        return "updates workouts"
+        # creating workout object
+        workout = WorkoutModel(name = name)
 
-    elif (request.method == "DELETE"):
-        return "deleting workouts"
+        # save on database
+        db.session.add(workout)
+        db.session.commit()
+
+
+        return f'workout {name} was created'
         
     else:
         return "This route does not exist"

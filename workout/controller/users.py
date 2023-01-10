@@ -1,8 +1,7 @@
-from workout import app
-from workout import db
+from workout import app, db
 from flask import request, jsonify
-
 from workout.model.user import UserModel
+
 #Route for all users
 @app.route("/api/users", methods=['POST','DELETE', 'GET', 'PUT'])
 def route_users():
