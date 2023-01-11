@@ -46,6 +46,7 @@ def route_users():
     
     else:
         return "This route does not exist"
+        
 #Route for specific user
 @app.route("/api/user/<id>", methods=['POST','DELETE', 'GET', 'PUT'])
 def route_user_id(id):
