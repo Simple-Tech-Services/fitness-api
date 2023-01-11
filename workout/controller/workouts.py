@@ -1,5 +1,5 @@
 from workout import app, db
-from flask import request
+from flask import request, jsonify
 from workout.model.workout import WorkoutModel
 
 @app.route("/api/workouts", methods=['POST', 'GET'])
@@ -25,9 +25,20 @@ def route_workouts():
 
 @app.route("/api/workout/<id>", methods=['POST', 'GET', 'DELETE', 'PUT'])
 def route_workout_id(id):
+    if (request.method == 'POST'):
+        return 
+    elif (request.method == 'GET'):
+        data = {}
+        result = None
+        try:
+            result = db.session.execute(db.select(WorkoutModel).filter_by(id=id)).one()
+        except:
+            return "workout not found"
+        
+        for user in result:
+            data = {"workout name": user.name}
 
-    if (request.method == 'GET'):
-        return "getting a workout"
+        return jsonify(data)
 
     elif (request.method == 'DELETE'):
         result = None
