@@ -9,9 +9,11 @@ def route_workouts():
 
     elif (request.method == 'POST'):
         name = request.form['name']
+        description = request.form['description']
 
         # creating workout object
-        workout = WorkoutModel(name = name)
+        workout = WorkoutModel(name=name,
+                               description=description)
 
         # save on database
         db.session.add(workout)
@@ -26,17 +28,20 @@ def route_workouts():
 @app.route("/api/workout/<id>", methods=['POST', 'GET', 'DELETE', 'PUT'])
 def route_workout_id(id):
     if (request.method == 'POST'):
-        return 
+        return
+    
     elif (request.method == 'GET'):
         data = {}
         result = None
+
         try:
             result = db.session.execute(db.select(WorkoutModel).filter_by(id=id)).one()
         except:
             return "workout not found"
         
-        for user in result:
-            data = {"workout name": user.name}
+        for workout in result:
+            data = {"workout name": workout.name,
+                    "description": workout.description}
 
         return jsonify(data)
 
@@ -45,7 +50,6 @@ def route_workout_id(id):
 
         try:
             result = db.session.execute(db.select(WorkoutModel).filter_by(id=id)).one()
-        
         except:
             return "workout was not found"
         
@@ -54,3 +58,6 @@ def route_workout_id(id):
             db.session.commit()
 
         return "deleting a workout"
+    
+    elif (request.method == 'PUT'):
+        return
