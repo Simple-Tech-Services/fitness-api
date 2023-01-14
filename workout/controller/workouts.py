@@ -60,4 +60,32 @@ def route_workout_id(id):
         return "deleting a workout"
     
     elif (request.method == 'PUT'):
-        return
+        data_list = request.json
+
+        name = None
+        result = None
+
+        try:
+            result = db.session.execute(db.select(WorkoutModel).filter_by(id=id)).one()
+        except:
+            return "workout was not found"
+        
+        for items in data_list:
+            field = items.get("field")
+            new_value = items.get("newValue")
+
+            for workout in result:
+                name = workout.name
+                if(field == "name"):
+                    workout.name = new_value
+                elif(field == "description"):
+                    workout.description = new_value
+
+            db.session.commit()
+
+
+        return f'workout {workout.name} was updated'
+
+    else:
+        return "route does not exist"
+
