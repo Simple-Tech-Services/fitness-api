@@ -37,7 +37,7 @@ def route_workout_id(id):
             return "workout not found"
         
         for workout in result:
-            data = {"name": workout.name,
+            data = {"workoutName": workout.name,
                     "description": workout.description}
 
         return jsonify(data)
