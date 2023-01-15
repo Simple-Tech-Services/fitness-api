@@ -26,11 +26,8 @@ def route_workouts():
         return "This route does not exist"
 
 @app.route("/api/workout/<id>", methods=['POST', 'GET', 'DELETE', 'PUT'])
-def route_workout_id(id):
-    if (request.method == 'POST'):
-        return
-    
-    elif (request.method == 'GET'):
+def route_workout_id(id): 
+    if (request.method == 'GET'):
         data = {}
         result = None
 
@@ -81,10 +78,9 @@ def route_workout_id(id):
                 elif(field == "description"):
                     workout.description = new_value
 
-            db.session.commit()
+        db.session.commit()
 
-
-        return f'workout {workout.name} was updated'
+        return f'workout {name} was updated'
 
     else:
         return "route does not exist"
