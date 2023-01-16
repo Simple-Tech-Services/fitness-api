@@ -1,14 +1,26 @@
-from workout import app
-from flask import request
+from workout import app, db
+from flask import request, jsonify
+from workout.model.exercise import ExerciseModel
 
 
-@app.route("/exercises", methods=['POST', 'GET', 'DELETE', 'PUT'])
+@app.route("/api/exercises", methods=['POST', 'GET', 'DELETE', 'PUT'])
 def route_exercises():
     if (request.method == 'GET'):
         return "got all exercises"
 
     elif (request.method == 'POST'):
-        return "exercise created"
+        name = request.form['name']
+        sets = request.form['sets']
+        reps = request.form['reps']
+
+        exercise = ExerciseModel(name=name,
+                                 sets=sets,
+                                 reps=reps)
+
+        db.session.add(exercise)
+        db.session.commit()
+
+        return f'exercise {name} was created'
     
     elif (request.method == 'PUT'):
         return "exercise updated"
