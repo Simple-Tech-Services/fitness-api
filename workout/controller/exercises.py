@@ -3,7 +3,7 @@ from flask import request, jsonify
 from workout.model.exercise import ExerciseModel
 
 
-@app.route("/api/exercises", methods=['POST', 'GET', 'DELETE', 'PUT'])
+@app.route("/api/exercises", methods=['POST', 'GET'])
 def route_exercises():
     if (request.method == 'GET'):
         return "got all exercises"
@@ -22,11 +22,18 @@ def route_exercises():
 
         return f'exercise {name} was created'
     
+
+    else:
+        return "route does not exist."
+
+@app.route("/api/exercise/<id>", methods=['GET', 'DELETE', 'PUT'])
+def route_exercises():
+    if (request.method == 'GET'):
+        return "got a user"
     elif (request.method == 'PUT'):
         return "exercise updated"
 
     elif (request.method == 'DELETE'):
         return "exercise deleted"
-
     else:
         return "route does not exist."
