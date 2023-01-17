@@ -44,9 +44,23 @@ def route_exercises():
         return "route does not exist."
 
 @app.route("/api/exercise/<id>", methods=['GET', 'DELETE', 'PUT'])
-def route_exercise_id():
+def route_exercise_id(id):
     if (request.method == 'GET'):
-        return "got a user"
+        data = {}
+        result = None
+        
+        try:
+            result = db.session.execute(db.select(ExerciseModel).filter_by(id=id)).one()
+        except:
+            return "Exercise was not found"
+
+        for exercise in result:
+            data = {"name": exercise.name,
+                    "sets": exercise.sets,
+                    "reps": exercise.reps}
+
+        return jsonify(data)
+
     elif (request.method == 'PUT'):
         return "exercise updated"
 
