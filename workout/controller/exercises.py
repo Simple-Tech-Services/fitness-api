@@ -65,6 +65,16 @@ def route_exercise_id(id):
         return "exercise updated"
 
     elif (request.method == 'DELETE'):
+        result = None
+        try:
+            result = db.session.execute(db.select(ExerciseModel).filter_by(id=id)).one()
+        except:
+            return "Exercise was not found"
+
+        for exercise in result:
+            db.session.delete(exercise)
+            db.session.commit()
+            
         return "exercise deleted"
     else:
         return "route does not exist."
