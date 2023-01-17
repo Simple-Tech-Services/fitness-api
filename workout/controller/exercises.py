@@ -62,7 +62,40 @@ def route_exercise_id(id):
         return jsonify(data)
 
     elif (request.method == 'PUT'):
-        return "exercise updated"
+        data_list = request.json
+
+        name = None 
+        result = None      
+
+        # get the user we want to change from db
+        try:
+            result = db.session.execute(db.select(ExerciseModel).filter_by(id=id)).one()
+        except:
+            return "Exercise was not found"
+        
+        # loop over data to get new value for field 
+        for item in data_list:
+            field = item.get("field")
+            new_value = item.get("newValue")
+
+            # update user with new values
+            for exercise in result:
+                name = exercise.name
+                if(field == "name"):
+                    exercise.name = new_value
+                elif(field == "sets"):
+                    exercise.sets = new_value
+                elif(field == "reps"):
+                    exercise.reps = new_value
+
+                else:
+                    return "exercise properties was not found"
+
+        # commit changes
+        db.session.commit()
+
+        # return status code
+        return f'exercise {name} was updated!'
 
     elif (request.method == 'DELETE'):
         result = None
@@ -74,7 +107,7 @@ def route_exercise_id(id):
         for exercise in result:
             db.session.delete(exercise)
             db.session.commit()
-            
+
         return "exercise deleted"
     else:
         return "route does not exist."
