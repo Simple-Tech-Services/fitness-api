@@ -1,6 +1,88 @@
 from workout import app, db
-from flask import request, jsonify
+from flask import request, jsonify, make_response
+import uuid
 from workout.model.user import UserModel
+from datetime import datetime, timedelta
+import jwt
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    auth = request.form
+
+    # safe guard to check if ther is an email and password    
+    if not auth or not auth.get('email') or not auth.get('password'):
+        # returns 401 if any email or / and password is missing
+        return 'could not verify'
+
+
+    # getting user data
+    user = None
+    try:
+        result = db.session.execute(db.select(UserModel).filter_by(email = auth.get('email'))).one()
+    
+        for currentUser in result:
+            user = currentUser
+
+    except:
+        return 'no user was found'
+
+    # check for password
+    if auth.get('password') == user.password:
+        # give jwt token
+        token = jwt.encode({
+            'public_id':user.public_id,
+            'exp': datetime.utcnow() + timedelta(minutes = 30)
+        }, app.config['SECRET_KEY'])
+
+        return make_response(jsonify({'token': token}))
+    
+    return 'wrong password'
+
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    # create a dictionary of the form data
+    data = request.form
+
+    # get name, email and password
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    username = request.form['username']
+    email = data.get('email'),
+    password = data.get('password')
+
+    # checking for existing user
+    user = None
+
+    try:
+        result = db.session.execute(db.select(UserModel).filter_by(email=email)).one()
+        
+        for currentUser in result:
+            user = currentUser
+
+    except:
+        pass
+
+    if not user:
+        # create user object
+        user = UserModel(
+                public_id = str(uuid.uuid4()),
+                last_name=last_name,
+                first_name=first_name,
+                username=username,
+                email=email,
+                password=password)
+
+
+        # save on db
+        db.session.add(user)
+        db.session.commit() 
+
+        return f'user {username} was created'
+    else:
+        return 'User already exists. Please Log in.'
+
+
 
 #Route for all users
 @app.route("/api/users", methods=['POST','DELETE', 'GET', 'PUT'])
@@ -24,26 +106,7 @@ def route_users():
             userList.append(userDict)
 
         return jsonify(userList)
-    
-    elif (request.method == 'POST'):
-        # store user info
-        username = request.form['username']
-        password = request.form['password']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        
-        # create user object
-        user = UserModel(username=username,
-                        password=password,
-                        first_name=first_name,
-                        last_name=last_name)
-
-        # save on db
-        db.session.add(user)
-        db.session.commit()
-
-        return f'user {username} was created'
-    
+     
     else:
         return "This route does not exist"
         
