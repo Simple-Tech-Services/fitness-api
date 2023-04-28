@@ -5,21 +5,22 @@ from workout.model.user import UserModel
 from datetime import datetime, timedelta
 import jwt
 
+
 @app.route('/api/login', methods=['POST'])
 def login():
     auth = request.form
 
-    # safe guard to check if ther is an email and password    
+    # safe guard to check if ther is an email and password
     if not auth or not auth.get('email') or not auth.get('password'):
         # returns 401 if any email or / and password is missing
         return 'could not verify'
 
-
     # getting user data
     user = None
     try:
-        result = db.session.execute(db.select(UserModel).filter_by(email = auth.get('email'))).one()
-    
+        result = db.session.execute(
+            db.select(UserModel).filter_by(email=auth.get('email'))).one()
+
         for currentUser in result:
             user = currentUser
 
@@ -30,12 +31,12 @@ def login():
     if auth.get('password') == user.password:
         # give jwt token
         token = jwt.encode({
-            'public_id':user.public_id,
-            'exp': datetime.utcnow() + timedelta(minutes = 30)
+            'public_id': user.public_id,
+            'exp': datetime.utcnow() + timedelta(minutes=30)
         }, app.config['SECRET_KEY'])
 
         return make_response(jsonify({'token': token}))
-    
+
     return 'wrong password'
 
 
@@ -55,8 +56,9 @@ def signup():
     user = None
 
     try:
-        result = db.session.execute(db.select(UserModel).filter_by(email=email)).one()
-        
+        result = db.session.execute(
+            db.select(UserModel).filter_by(email=email)).one()
+
         for currentUser in result:
             user = currentUser
 
@@ -66,59 +68,61 @@ def signup():
     if not user:
         # create user object
         user = UserModel(
-                public_id = str(uuid.uuid4()),
-                last_name=last_name,
-                first_name=first_name,
-                username=username,
-                email=email,
-                password=password)
-
+            public_id=str(uuid.uuid4()),
+            last_name=last_name,
+            first_name=first_name,
+            username=username,
+            email=email,
+            password=password)
 
         # save on db
         db.session.add(user)
-        db.session.commit() 
+        db.session.commit()
 
         return f'user {username} was created'
     else:
         return 'User already exists. Please Log in.'
 
 
-
-#Route for all users
-@app.route("/api/users", methods=['POST','DELETE', 'GET', 'PUT'])
+# Route for all users
+@app.route("/api/users", methods=['POST', 'DELETE', 'GET', 'PUT'])
 def route_users():
-    if(request.method == 'GET'):
+    if (request.method == 'GET'):
         userList = []
         result = None
 
         try:
-            result = db.session.execute(db.select(UserModel).order_by(UserModel.username)).scalars()
+            result = db.session.execute(
+                db.select(UserModel).order_by(UserModel.username)).scalars()
         except:
             return "Server Error"
 
         for user in result:
             userDict = {
-                        "id" : user.id,
-                        "username" : user.username,
-                        "first_name" : user.first_name,
-                        "last_name" : user.last_name
-                        }
+                "id": user.id,
+                "username": user.username,
+                "first_name": user.first_name,
+                "last_name": user.last_name
+            }
             userList.append(userDict)
 
         return jsonify(userList)
-     
+
     else:
         return "This route does not exist"
-        
-#Route for specific user
-@app.route("/api/user/<id>", methods=['POST','DELETE', 'GET', 'PUT'])
+
+# Route for specific user
+
+
+@app.route("/api/user/<id>", methods=['POST', 'DELETE', 'GET', 'PUT'])
 def route_user_id(id):
     if (request.method == "GET"):
         data = {}
         result = None
-        
+
         try:
-            result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
+            result = db.session.execute(
+                db.select(UserModel).filter_by(id=id)).one()
         except:
             return "User was not found"
 
@@ -132,7 +136,8 @@ def route_user_id(id):
     elif (request.method == 'DELETE'):
         result = None
         try:
-            result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
+            result = db.session.execute(
+                db.select(UserModel).filter_by(id=id)).one()
         except:
             return "User was not found"
 
@@ -146,16 +151,17 @@ def route_user_id(id):
         # store new values of user data
         data_list = request.json
 
-        username = None 
-        result = None      
+        username = None
+        result = None
 
         # get the user we want to change from db
         try:
-            result = db.session.execute(db.select(UserModel).filter_by(id=id)).one()
+            result = db.session.execute(
+                db.select(UserModel).filter_by(id=id)).one()
         except:
             return "User was not found"
-        
-        # loop over data to get new value for field 
+
+        # loop over data to get new value for field
         for item in data_list:
             field = item.get("field")
             new_value = item.get("newValue")
@@ -163,13 +169,13 @@ def route_user_id(id):
             # update user with new values
             for user in result:
                 username = user.username
-                if(field == "firstName"):
+                if (field == "firstName"):
                     user.first_name = new_value
-                elif(field == "lastName"):
+                elif (field == "lastName"):
                     user.last_name = new_value
-                elif(field == "userName"):
+                elif (field == "userName"):
                     user.username = new_value
-                elif(field == "password"):
+                elif (field == "password"):
                     user.password = new_value
                 else:
                     return "user properties was not found"

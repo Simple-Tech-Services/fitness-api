@@ -10,17 +10,18 @@ def route_exercises():
         result = None
 
         try:
-            result = db.session.execute(db.select(ExerciseModel).order_by(ExerciseModel.id)).scalars()
+            result = db.session.execute(
+                db.select(ExerciseModel).order_by(ExerciseModel.id)).scalars()
         except:
             return "Server Error"
 
         for exercise in result:
             exerciseDict = {
-                        "id" : exercise.id,
-                        "name" : exercise.name,
-                        "sets" : exercise.sets,
-                        "reps" : exercise.reps
-                        }
+                "id": exercise.id,
+                "name": exercise.name,
+                "sets": exercise.sets,
+                "reps": exercise.reps
+            }
             exerciseList.append(exerciseDict)
 
         return jsonify(exerciseList)
@@ -38,19 +39,20 @@ def route_exercises():
         db.session.commit()
 
         return f'exercise {name} was created'
-    
 
     else:
         return "route does not exist."
+
 
 @app.route("/api/exercise/<id>", methods=['GET', 'DELETE', 'PUT'])
 def route_exercise_id(id):
     if (request.method == 'GET'):
         data = {}
         result = None
-        
+
         try:
-            result = db.session.execute(db.select(ExerciseModel).filter_by(id=id)).one()
+            result = db.session.execute(
+                db.select(ExerciseModel).filter_by(id=id)).one()
         except:
             return "Exercise was not found"
 
@@ -64,16 +66,17 @@ def route_exercise_id(id):
     elif (request.method == 'PUT'):
         data_list = request.json
 
-        name = None 
-        result = None      
+        name = None
+        result = None
 
         # get the user we want to change from db
         try:
-            result = db.session.execute(db.select(ExerciseModel).filter_by(id=id)).one()
+            result = db.session.execute(
+                db.select(ExerciseModel).filter_by(id=id)).one()
         except:
             return "Exercise was not found"
-        
-        # loop over data to get new value for field 
+
+        # loop over data to get new value for field
         for item in data_list:
             field = item.get("field")
             new_value = item.get("newValue")
@@ -81,11 +84,11 @@ def route_exercise_id(id):
             # update user with new values
             for exercise in result:
                 name = exercise.name
-                if(field == "name"):
+                if (field == "name"):
                     exercise.name = new_value
-                elif(field == "sets"):
+                elif (field == "sets"):
                     exercise.sets = new_value
-                elif(field == "reps"):
+                elif (field == "reps"):
                     exercise.reps = new_value
 
                 else:
@@ -100,7 +103,8 @@ def route_exercise_id(id):
     elif (request.method == 'DELETE'):
         result = None
         try:
-            result = db.session.execute(db.select(ExerciseModel).filter_by(id=id)).one()
+            result = db.session.execute(
+                db.select(ExerciseModel).filter_by(id=id)).one()
         except:
             return "Exercise was not found"
 

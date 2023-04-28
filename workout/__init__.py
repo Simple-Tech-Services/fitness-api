@@ -4,6 +4,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import jwt
 
+# imports all routes from the controller directory
+from workout.model import user, workout
+from workout.controller import exercises, users, workouts
+
 # load enviroment variables from .env file
 cwd = getcwd()
 load_dotenv(cwd + "/.env")
@@ -26,13 +30,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = connectionURL
 db.init_app(app)
 
 # root route
+
+
 @app.route("/")
 def hello_world():
     return "welcome to our fitness app api"
 
-from workout.model import user, workout
-# imports all routes from the controller directory
-from workout.controller import exercises, users, workouts
 
 with app.app_context():
     db.create_all()
