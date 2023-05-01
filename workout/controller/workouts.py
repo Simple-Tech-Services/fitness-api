@@ -1,20 +1,20 @@
-from workout import app, db
+""" flask api tools and workout app variables """
 from flask import request, jsonify
-from workout.model.workout import WorkoutModel
+from workout import app, db
+from workout.model.workout_model import WorkoutModel
 
 
 @app.route("/api/workouts", methods=['POST', 'GET'])
 def route_workouts():
-    if (request.method == 'GET'):
+    """ workout api CRUD operations """
+    if request.method == 'GET':
         return "Getting all workouts"
 
-    elif (request.method == 'POST'):
+    if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
-
         # creating workout object
-        workout = WorkoutModel(name=name,
-                               description=description)
+        workout = WorkoutModel(name=name, description=description)
 
         # save on database
         db.session.add(workout)
@@ -22,19 +22,19 @@ def route_workouts():
 
         return f'workout {name} was created'
 
-    else:
-        return "This route does not exist"
+    return "This route does not exist"
 
 
-@app.route("/api/workout/<id>", methods=['POST', 'GET', 'DELETE', 'PUT'])
-def route_workout_id(id):
-    if (request.method == 'GET'):
+@app.route("/api/workout/<workout_id>", methods=['POST', 'GET', 'DELETE', 'PUT'])
+def route_workout_id(workout_id):
+    """ specific workout with ID api CRUD operations """
+    if request.method == 'GET':
         data = {}
         result = None
 
         try:
             result = db.session.execute(
-                db.select(WorkoutModel).filter_by(id=id)).one()
+                db.select(WorkoutModel).filter_by(id=workout_id)).one()
         except:
             return "workout not found"
 
@@ -44,12 +44,12 @@ def route_workout_id(id):
 
         return jsonify(data)
 
-    elif (request.method == 'DELETE'):
+    if request.method == 'DELETE':
         result = None
 
         try:
             result = db.session.execute(
-                db.select(WorkoutModel).filter_by(id=id)).one()
+                db.select(WorkoutModel).filter_by(id=workout_id)).one()
         except:
             return "workout was not found"
 
@@ -59,7 +59,7 @@ def route_workout_id(id):
 
         return "deleting a workout"
 
-    elif (request.method == 'PUT'):
+    if request.method == 'PUT':
         data_list = request.json
 
         name = None
@@ -67,7 +67,7 @@ def route_workout_id(id):
 
         try:
             result = db.session.execute(
-                db.select(WorkoutModel).filter_by(id=id)).one()
+                db.select(WorkoutModel).filter_by(id=workout_id)).one()
         except:
             return "workout was not found"
 
@@ -77,14 +77,13 @@ def route_workout_id(id):
 
             for workout in result:
                 name = workout.name
-                if (field == "name"):
+                if field == "name":
                     workout.name = new_value
-                elif (field == "description"):
+                elif field == "description":
                     workout.description = new_value
 
         db.session.commit()
 
         return f'workout {name} was updated'
 
-    else:
-        return "route does not exist"
+    return "route does not exist"

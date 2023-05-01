@@ -1,41 +1,19 @@
-from os import getenv, getcwd
-from dotenv import load_dotenv
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-import jwt
+"""
+setup - imports enviroment variables
+        initializes flask application and database connnection
 
-# load enviroment variables from .env file
-cwd = getcwd()
-load_dotenv(cwd + "/.env")
+controller - routes for all crud operations
 
-# store env variables
-username = getenv('DB_USERNAME')
-password = getenv('DB_PASSWORD')
-host = getenv('DB_HOST')
-name = getenv('DB_NAME')
-secret = getenv('SECRET_KEY')
-
-# init flask app and database
-db = SQLAlchemy()
-app = Flask(__name__)
-app.config['SECRET_KEY'] = secret
-
-# configure database connection
-connectionURL = f'mysql+pymysql://{username}:{password}@{host}/{name}'
-app.config["SQLALCHEMY_DATABASE_URI"] = connectionURL
-db.init_app(app)
-
-
-# imports all routes from the controller directory
+model - schemas for all data models
+"""
+from workout.setup import app, db
 from workout.controller import exercises, users, workouts
-from workout.model import user, workout
-
-# root route
+from workout.model import *
 
 @app.route("/")
 def hello_world():
+    """hello world  route of api"""
     return "welcome to our fitness app api"
-
 
 with app.app_context():
     db.create_all()

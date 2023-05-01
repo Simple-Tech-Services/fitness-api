@@ -1,13 +1,16 @@
-from workout import app, db
-from flask import request, jsonify, make_response
+""" flask api tools and app variables"""
 import uuid
-from workout.model.user import UserModel
 from datetime import datetime, timedelta
 import jwt
+from flask import request, jsonify, make_response
+
+from workout import app, db
+from workout.model.user_model import UserModel
 
 
 @app.route('/api/login', methods=['POST'])
 def login():
+    """ user route login """
     auth = request.form
 
     # safe guard to check if ther is an email and password
@@ -20,10 +23,8 @@ def login():
     try:
         result = db.session.execute(
             db.select(UserModel).filter_by(email=auth.get('email'))).one()
-
-        for currentUser in result:
-            user = currentUser
-
+        for current_user in result:
+            user = current_user
     except:
         return 'no user was found'
 
@@ -42,6 +43,7 @@ def login():
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
+    """sign up route"""
     # create a dictionary of the form data
     data = request.form
 
@@ -58,10 +60,8 @@ def signup():
     try:
         result = db.session.execute(
             db.select(UserModel).filter_by(email=email)).one()
-
-        for currentUser in result:
-            user = currentUser
-
+        for current_user in result:
+            user = current_user
     except:
         pass
 
@@ -80,15 +80,16 @@ def signup():
         db.session.commit()
 
         return f'user {username} was created'
-    else:
-        return 'User already exists. Please Log in.'
+
+    return 'User already exists. Please Log in.'
 
 
 # Route for all users
 @app.route("/api/users", methods=['POST', 'DELETE', 'GET', 'PUT'])
 def route_users():
-    if (request.method == 'GET'):
-        userList = []
+    """user crud operations"""
+    if request.method == 'GET':
+        user_list = []
         result = None
 
         try:
@@ -98,31 +99,29 @@ def route_users():
             return "Server Error"
 
         for user in result:
-            userDict = {
+            user_dict = {
                 "id": user.id,
                 "username": user.username,
                 "first_name": user.first_name,
                 "last_name": user.last_name
             }
-            userList.append(userDict)
+            user_list.append(user_dict)
 
-        return jsonify(userList)
+        return jsonify(user_list)
 
     else:
         return "This route does not exist"
 
-# Route for specific user
-
-
-@app.route("/api/user/<id>", methods=['POST', 'DELETE', 'GET', 'PUT'])
-def route_user_id(id):
-    if (request.method == "GET"):
+@app.route("/api/user/<user_id>", methods=['POST', 'DELETE', 'GET', 'PUT'])
+def route_user_id(user_id):
+    """ specific user with id api CRUD operations """
+    if request.method == "GET":
         data = {}
         result = None
 
         try:
             result = db.session.execute(
-                db.select(UserModel).filter_by(id=id)).one()
+                db.select(UserModel).filter_by(id=user_id)).one()
         except:
             return "User was not found"
 
@@ -133,7 +132,7 @@ def route_user_id(id):
 
         return jsonify(data)
 
-    elif (request.method == 'DELETE'):
+    if request.method == 'DELETE':
         result = None
         try:
             result = db.session.execute(
@@ -147,7 +146,7 @@ def route_user_id(id):
 
         return "deleting users"
 
-    elif (request.method == 'PUT'):
+    if request.method == 'PUT':
         # store new values of user data
         data_list = request.json
 
@@ -169,22 +168,20 @@ def route_user_id(id):
             # update user with new values
             for user in result:
                 username = user.username
-                if (field == "firstName"):
+                if field == "firstName":
                     user.first_name = new_value
-                elif (field == "lastName"):
+                elif field == "lastName":
                     user.last_name = new_value
-                elif (field == "userName"):
+                elif field == "userName":
                     user.username = new_value
-                elif (field == "password"):
+                elif field == "password":
                     user.password = new_value
                 else:
                     return "user properties was not found"
 
         # commit changes
         db.session.commit()
-
         # return status code
         return f'user {username} was updated!'
 
-    else:
-        return "This route does not exist"
+    return "This route does not exist"
