@@ -1,6 +1,6 @@
 ## Introduction
 
-Fitness API built with Flask and MySQL
+> python rest api to create workout sessions with a mysql database
 
 ## Setup
 
@@ -36,6 +36,7 @@ Deactivate virtual environment
 deactivate
 ```
 
+---
 Generate virtual environment on Mac or Linux
 
 ```
@@ -60,7 +61,7 @@ deactivate
 pip install -r ./requirements.txt
 ```
 
-#### Create your .env file for environment variables
+### 4. Create your .env file for environment variables
 
 Use the .env.example to make a .env file for the environment variables. Populate the variables with your local database credential.
 
