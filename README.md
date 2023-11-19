@@ -4,23 +4,21 @@ Fitness API built with Flask and MySQL
 
 ## Setup
 
-#### Clone repository
+### 1. Clone repository
 
-###### Windows - Mac - Linux
-
-```
-git clone repo_name
-```
+Windows - Mac - Linux
 
 ```
-cd repo_name
+git clone https://github.com/Simple-Tech-Services/fitness-api.git
 ```
 
-#### Create virtual environment
+```
+cd https://github.com/Simple-Tech-Services/fitness-api.git
+```
 
-###### Windows
+### 2. Create a virtual environment with venv
 
-Generate virtual environment
+Generate virtual environment Windows
 
 ```
 py -3 -m venv venv
@@ -38,9 +36,7 @@ Deactivate virtual environment
 deactivate
 ```
 
-###### Mac - Linux
-
-Generate virtual environment
+Generate virtual environment on Mac or Linux
 
 ```
 python3 -m venv venv
@@ -58,9 +54,7 @@ Deactivate virtual environment
 deactivate
 ```
 
-#### Install required packages
-
-###### Windows - Mac - Linux
+### 3. Install required packages
 
 ```
 pip install -r ./requirements.txt
@@ -68,21 +62,17 @@ pip install -r ./requirements.txt
 
 #### Create your .env file for environment variables
 
-Use the .env.example to make a .env file for the environment variables. Populate the variables with your local database information.
+Use the .env.example to make a .env file for the environment variables. Populate the variables with your local database credential.
 
 ## Usage
 
-###### Windows - Mac - Linux
-
-#### Run App
-
-###### Windows
+On Windows
 
 ```
 py -3 run.py
 ```
 
-###### Mac - Linux
+On Mac or Linux
 
 ```
 python3 run.py
